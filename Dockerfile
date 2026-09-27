@@ -1,4 +1,4 @@
-FROM ubuntu:latest
-LABEL authors="deckfly"
-
-ENTRYPOINT ["top", "-b"]
+#FROM ubuntu:latest
+#LABEL authors="deckfly"
+#
+#ENTRYPOINT ["top", "-b"]
