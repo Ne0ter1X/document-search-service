@@ -1,13 +1,25 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-app = FastAPI()
+from app.api.routes import router
+from app.db import engine
+from app.es import close_es, get_es
 
 
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    get_es()
+    yield
+
+    await close_es()
+    await engine.dispose()
 
 
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+app = FastAPI(
+    title="Search Service",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+app.include_router(router)

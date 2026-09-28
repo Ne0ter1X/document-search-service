@@ -14,7 +14,6 @@ from app.models import Base, Document
 
 
 def parse_rubrics(raw: str | None) -> list[str]:
-    """rubrics в CSV — Python-список в виде строки: "['a','b']"."""
     if not raw:
         return []
     try:
