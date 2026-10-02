@@ -43,6 +43,26 @@ services:
       timeout: 5s
       retries: 30
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: search_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://search:search@postgres:5432/search
+      ES_URL: http://elasticsearch:9200
+      ES_INDEX: documents
+      CSV_PATH: data/posts.csv
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:ro
+
 volumes:
   pg_data:
   es_data:
